@@ -86,7 +86,7 @@ const pool = require('../modules/pool');
 // GET ROUTE - GABRIEL
 router.get('/', (req, res) => {
     console.log('In GET request')
-    let queryText = 'SELECT * FROM shopping_list;';
+    let queryText = 'SELECT * FROM "shopping_list";';
     
     pool.query(queryText)
     .then((result) => {
@@ -124,13 +124,13 @@ router.put('/:id', (req, res) => {
     console.log(req.params, req.body);
     const modifiedShoppingList = parseInt(req.params.id);
     console.log(modifiedShoppingList);
-    let queryText = `UPDATE "shopping_list" SET "purchased" = $2 WHERE "id" = $1;`;
+    let queryText = `UPDATE "shopping_list" SET "purchased" = NOT "purchased" WHERE "id" = $1;`;
 
     // const queryArgs = [modifiedShoppingList, updateShoppingId];
 
     pool
-//                           $1                $2
-    .query(queryText, [modifiedShoppingList, req.body.description])
+//                           $1                
+    .query(queryText, [modifiedShoppingList])
     .then((result) => {
         res.send(result.rows);
         res.sendStatus(200);
